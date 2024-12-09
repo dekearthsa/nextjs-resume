@@ -45,3 +45,13 @@ body {
   from, to { border-color: transparent }
   50% { border-color: white }
 }
+
+.set-up-grid{
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+
+.silder-img{
+  
+}

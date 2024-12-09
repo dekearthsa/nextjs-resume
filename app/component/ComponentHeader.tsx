@@ -2,7 +2,7 @@
 
 'use client';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 const ComponentHeader = () => {
     const router = useRouter();
@@ -10,17 +10,19 @@ const ComponentHeader = () => {
         router.push(path)
     }
 
-    useEffect(() => {
-        const fadeElements = document.querySelectorAll('.fade-ins');
-        fadeElements.forEach((el, index) => {
-            setTimeout(() => {
-                el.classList.remove('opacity-0', 'translate-y-[-2.5rem]');
-                el.classList.add('opacity-100', 'translate-y-0');
-            }, index * 200); 
-        });
-    },[])
+    // useEffect(() => {
+    //     const fadeElements = document.querySelectorAll('.fade-ins');
+    //     fadeElements.forEach((el, index) => {
+    //         setTimeout(() => {
+    //             el.classList.remove('opacity-0', 'translate-y-[-2.5rem]');
+    //             el.classList.add('opacity-100', 'translate-y-0');
+    //         }, index * 200); 
+    //     });
+    // },[])
+
     return (
-        <div className='fade-ins opacity-0 translate-y-[-2.5rem] duration-500 bg-gradient-to-b from-gray-800'>
+        // fade-ins opacity-0 translate-y-[-2.5rem] duration-500 bg-gradient-to-b from-gray-800
+        <div className=''>
             <div className="grid grid-cols-2 pt-5 pb-5 ">
                 <div className="flex justify-start ml-10">
                     <button className="font-bold"
