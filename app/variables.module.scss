@@ -1,0 +1,61 @@
+:export{
+  .cell {
+    width: 100%;
+    height: 100%;
+    // border: 1px solid #fff1;
+    z-index: 2;
+  }
+  
+  @for $i from 0 to 20 {
+    .cell:nth-child(20n + #{$i + 1}):hover ~ .content {
+      --positionX: #{$i};
+    }
+    .cell:nth-child(n + #{20 * $i + 1}):nth-child(-n + #{20 * ($i + 1)}):hover ~ .content {
+      --positionY: #{$i};
+    }
+  }
+  
+  .content {
+    --positionX: 10;
+    --positionY: 10;
+  
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .follower {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-image: radial-gradient(#0000, #0007);
+    border-radius: 50%;
+    transform-origin: center 20px;
+    animation: rotate infinite linear; 
+  
+    @for $i from 0 to 5 {
+      $randomValue: (1 + (random(30) / 10)) * 1%; // Ensure it's treated as a percentage
+    
+      &:nth-child(#{$i + 1}) {
+        top: calc(#{$randomValue} + var(--positionY) * 5%);
+        left: calc(#{$randomValue} + var(--positionX) * 5%);
+        background-color: hsl(360/5*$i, 75%, 75%);
+        animation-duration: #{1 + $i / 10}s;
+        transition: all #{0.3 + $i / 10}s;
+      }
+    }
+    
+    
+  
+    @keyframes rotate {
+      from { transform: translate(-50%, -20px) rotate(0); }
+      to { transform: translate(-50%, -20px) rotate(360deg); }
+    }
+  }
+
+  
+
+ 
+}

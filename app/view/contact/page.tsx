@@ -1,6 +1,7 @@
 "use client"
 
 import ComponentHeader from "../../component/ComponentHeader";
+import Image from "next/image";
 import Script from "next/script";
 import { useState } from "react";
 
@@ -31,7 +32,7 @@ const ViewContact = () => {
     const handleLoadScript = () => {
         OmiseCard = (window as any).OmiseCard;
         OmiseCard.configure({
-            publicKey: "",
+            publicKey: "pkey_test_5x6z2poriuh0aisxnp2",
             currency: "THB",
             frameLabel: "Demo-test-shop",
             submitLabel: "Pay NOW",
@@ -43,57 +44,112 @@ const ViewContact = () => {
         if (!OmiseCard) return;
         OmiseCard.configure({
             defaultPaymentMethod: "credit_card",
-            otherPaymentMethods: [],
+            otherPaymentMethods: ["promptpay", "mobile_banking_bbl"],
         });
         OmiseCard.configureButton("#credit-card");
         OmiseCard.attach();
     };
 
-    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        if(amount < 0 && isPackage === ""){
-            alert("Empty payment!");
-        }else{
-            e.preventDefault();
-            creditCardConfigure();
-            OmiseCard?.open({
-                amount: amount, // 100 THB in satangs
-                onCreateTokenSuccess: async (token) => {
-                setLoading(true);
-                try {
-                    const response = await fetch("/api/payment", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        token,
-                        amount: amount,
-                    }),
+    const haddlePromptpay = () => {
+        if (!OmiseCard) return;
+        OmiseCard.configure({
+            defaultPaymentMethod: "promptpay",
+            otherPaymentMethods: ["credit_card", "mobile_banking_bbl"],
+        });
+        OmiseCard.configureButton("#promptpay");
+        OmiseCard.attach();
+    }
+
+    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>,paymentType: string) => {
+        if (paymentType === "creditCard"){
+            if(amount <= 0){
+                alert("Empty payment!");
+                return;
+            }else{
+                e.preventDefault();
+                creditCardConfigure();
+                OmiseCard?.open({
+                    amount: amount, // 100 THB in satangs
+                    onCreateTokenSuccess: async (token) => {
+                    setLoading(true);
+                    try {
+                        console.log("token:", token)
+                        const response = await fetch("http://localhost:9932/api/payment", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                token,
+                                amount: amount,
+                            }),
+                        });
+                        console.log("response => ",response)
+                        const result = await response.json();
+                        if (result.message === "success") {
+                            alert("Payment Successful!");
+                        } else {
+                            alert("Payment Failed: " + result.message);
+                        }
+                    } catch (error) {
+                        alert("Payment Error: " + error);
+                    } finally {
+                        setLoading(false);
+                    }
+                },
+                onFormClosed: () => {
+                    setLoading(false);
+                },
                 });
-                const result = await response.json();
-                if (result.success) {
-                    alert("Payment Successful!");
-                } else {
-                    alert("Payment Failed: " + result.message);
-                }
-            } catch (error) {
-                alert("Payment Error: " + error);
-            } finally {
-                setLoading(false);
+            }  
+        }else{
+            if(amount <= 0){
+                alert("Empty payment!");
+                return;
+            }else{
+                e.preventDefault();
+                haddlePromptpay();
+                OmiseCard?.open({
+                    amount: amount, // 100 THB in satangs
+                    onCreateTokenSuccess: async (token) => {
+                    setLoading(true);
+                    try {
+                        const response = await fetch("http://localhost:9932/api/payment", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                token,
+                                amount: amount,
+                                method: "qrcode"
+                            }),
+                        });
+                        console.log("response => ",response)
+                        const result = await response.json();
+                        if (result.message === "success") {
+                            alert("Payment Successful!");
+                        } else {
+                            alert("Payment Failed: " + result.message);
+                        }
+                    } catch (error) {
+                        alert("Payment Error: " + error);
+                    } finally {
+                        setLoading(false);
+                    }
+                },
+                onFormClosed: () => {
+                    setLoading(false);
+                },
+                });
             }
-        },
-        onFormClosed: () => {
-            setLoading(false);
-        },
-    });}   
+        }
 };
 
     const packageSelection = (pk:string, amount:number) => {
         setAmount(amount)
         setPackage(pk)
     }
-
-
 
     return (
     <div>
@@ -109,7 +165,16 @@ const ViewContact = () => {
     </div>
     <div className="flex justify-around mt-10">
         <div className="w-[300px] h-[350px] border-[1px] border-gray-300 rounded-lg">
-            <div className="flex justify-center">
+            <div>
+                <Image
+                    className="w-[100%] h-[250px] rounded-t-lg object-cover"
+                    src={"/payment/c_s.png"}
+                    width={1000}
+                    height={100}
+                    alt={"aa"}
+                />
+            </div>
+            <div className="flex justify-center mt-10">
                 <button
                     className="bg-gray-600 w-[140px] h-[40px] rounded-lg"
                     onClick={()=>{
@@ -121,7 +186,17 @@ const ViewContact = () => {
             </div>
         </div>
         <div className="w-[300px] h-[350px] border-[1px] border-gray-300 rounded-lg">
-            <div className="flex justify-center">
+            <div>
+                <Image
+                    className="w-[100%] h-[250px] rounded-t-lg object-cover"
+                    src={"/payment/c_m.png"}
+                    width={1000}
+                    height={100}
+                    alt={"aa"}
+                />
+            </div>
+            
+            <div className="flex justify-center mt-10">
                 <button
                     className="bg-gray-600 w-[140px] h-[40px] rounded-lg"
                     onClick={()=>{
@@ -133,7 +208,16 @@ const ViewContact = () => {
             </div>
         </div>
         <div className="w-[300px] h-[350px] border-[1px] border-gray-300 rounded-lg">
-            <div className="flex justify-center">
+        <div>
+                <Image
+                    className="w-[100%] h-[250px] rounded-t-lg object-cover"
+                    src={"/payment/c_h.png"}
+                    width={1000}
+                    height={100}
+                    alt={"aa"}
+                />
+            </div>
+            <div className="flex justify-center mt-10">
                 <button
                     className="bg-gray-600 w-[140px] h-[40px] rounded-lg"
                     onClick={()=>{
@@ -155,18 +239,67 @@ const ViewContact = () => {
                 }
             </div>
         </div>
-        <div className="text-center mt-[60px]">
-            <form>
-                <button
-                    id="credit-card"
-                    type="button"
-                    onClick={handleClick}
-                    disabled={loading}
-                >
-                    {loading ? "Processing..." : "ชำระเงินด้วยบัตรเครดิต"}
-                </button>
-            </form>
-        </div>
+        {
+            amount <= 0? 
+                <div className="flex justify-around" >
+                    <div className="text-center mt-[60px]">
+                        <form>
+                            <button
+                                className="bg-gray-500  p-2 w-[200px] font-bold rounded-xl"
+                                id="credit-card"
+                                type="button"
+                                onClick={(e) => handleClick(e,"creditCard")}
+                                disabled={true}
+                            >
+                                {loading ? "Processing..." : "ชำระเงินด้วยบัตรเครดิต"}
+                            </button>
+                        </form>
+                    </div>
+                    <div className="text-center mt-[60px]">
+                        <form>
+                            <button
+                                className="bg-gray-500  p-2 w-[200px] font-bold rounded-xl"
+                                id="promptpay"
+                                type="button"
+                                onClick={(e) => handleClick(e,"promptpay")}
+                                disabled={true}
+                            >
+                                {loading ? "Processing..." : "promptpay"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            :
+            <div className="flex justify-around">
+                    <div className="text-center mt-[60px]">
+                        <form>
+                            <button
+                                className="bg-blue-700  p-2 w-[200px] font-bold rounded-xl"
+                                id="credit-card"
+                                type="button"
+                                onClick={(e) => handleClick(e,"creditCard")}
+                                disabled={loading}
+                            >
+                                {loading ? "Processing..." : "ชำระเงินด้วยบัตรเครดิต"}
+                            </button>
+                        </form>
+                    </div>
+                    <div className="text-center mt-[60px]">
+                        <form>
+                            <button
+                                className="bg-blue-700  p-2 w-[200px] font-bold rounded-xl"
+                                id="promptpay"
+                                type="button"
+                                onClick={(e) => handleClick(e,"promptpay")}
+                                disabled={loading}
+                            >
+                                {loading ? "Processing..." : "promptpay"}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+        }
+        
     </div>
   );
 };

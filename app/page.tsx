@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import ComponentHeader from "./component/ComponentHeader";
+import MagicEffect from "./component/effect/ComponentEffect";
 
 export default function Home() {
   const arrayTitle = [
@@ -46,7 +47,7 @@ export default function Home() {
     <div>
         <ComponentHeader/>
         <div className="font-mono">
-        <div className="w-full mt-[300px] flex justify-center items-center">
+        <div className="w-full mt-[200px] flex justify-center items-center">
           <div className="typewriter-container ">
             <h1 className="text-2xl  border-r-4 border-orange-500 pr-2 mr-10">
             &nbsp; {text}
@@ -64,7 +65,11 @@ export default function Home() {
           Download resume
         </a>
         </div>
+        
       </div>
+        <div className="rounded-xl  m-auto mt-[100px] mb-[100px]">
+          <MagicEffect/>
+        </div>
     </div>
   );
 }

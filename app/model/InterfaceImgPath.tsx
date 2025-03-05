@@ -1,5 +1,0 @@
-// interface ImgPath {
-//     imgPath: string
-// }
-
-
