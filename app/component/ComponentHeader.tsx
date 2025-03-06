@@ -1,70 +1,127 @@
-// import { useState } from "react"
-
-'use client';
-import { useRouter } from 'next/navigation';
-// import { useEffect } from 'react';
-
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Menu, X } from "lucide-react";
 
 const ComponentHeader = () => {
     const router = useRouter();
-    const navigateTo = (path: string) => {
-        router.push(path)
-    }
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [currentMenu, setCurrentMenu] = useState("home");
 
-    // useEffect(() => {
-    //     const fadeElements = document.querySelectorAll('.fade-ins');
-    //     fadeElements.forEach((el, index) => {
-    //         setTimeout(() => {
-    //             el.classList.remove('opacity-0', 'translate-y-[-2.5rem]');
-    //             el.classList.add('opacity-100', 'translate-y-0');
-    //         }, index * 200); 
-    //     });
-    // },[])
+    const navigateTo = (path: string) => {
+        router.push(path);
+        setMenuOpen(false);
+    };
 
     return (
-        // fade-ins opacity-0 translate-y-[-2.5rem] duration-500 bg-gradient-to-b from-gray-800
-        <div className=''>
-            <div className="grid grid-cols-2 pt-5 pb-5 ">
-                <div className="flex justify-start ml-10">
-                    <button className="font-bold"
-                        onClick={()=> navigateTo("/")}
-                    >
-                        <h1>LOGO</h1>
-                    </button>
-                </div>
-                <div className="flex justify-around">
-                    <div>
-                        <button className="w-[150px] font-bold  hover:scale-125 duration-500"
-                            onClick={()=> navigateTo("/")}
-                        >
-                            <h1>HOME</h1>
-                        </button>
-                    </div>
-                    <div>
-                        <button className="w-[150px]  font-bold  hover:scale-125 duration-500"
-                            onClick={()=> navigateTo("/view/profile")}
-                        >
-                            <h1>PROFILE</h1>
-                        </button>
-                    </div>
-                    <div>
-                        <button className="w-[150px] font-bold  hover:scale-125   duration-500"
-                            onClick={()=> navigateTo("/view/project")}
-                        >
-                            <h1>PROJECT</h1>
-                        </button>
-                    </div>
-                    <div>
-                        <button className="w-[150px] font-bold  hover:scale-125 duration-500"
-                            onClick={()=> navigateTo("/view/contact")}
-                        >
-                            <h1>CONTACT</h1>
-                        </button>
-                    </div>
-                </div>
+        <div className="shadow-md w-full sticky top-0 z-50 text-white">
+        <div className="flex justify-between items-center p-5 md:px-10">
+            {/* Logo */}
+            <button
+            className="font-bold text-xl"
+            onClick={() => {navigateTo("/"); setCurrentMenu("home")}}
+            >
+            LOGO
+            </button>
+            {/* Desktop Menu */}
+            <div className="hidden md:flex space-x-10">
+            <button
+                className="font-bold hover:scale-110 transition duration-300"
+                onClick={() => {navigateTo("/"); setCurrentMenu("home")}}
+            >
+                HOME
+            </button>
+            <button
+                className="font-bold hover:scale-110 transition duration-300"
+                onClick={() => {navigateTo("/view/profile");  setCurrentMenu("profile")}}
+            >
+                PROFILE
+            </button>
+            <button
+                className="font-bold hover:scale-110 transition duration-300"
+                onClick={() => {navigateTo("/view/project"); setCurrentMenu("project") }}
+            >
+                PROJECT
+            </button>
+            <button
+                className="font-bold hover:scale-110 transition duration-300"
+                onClick={() => {navigateTo("/view/contact"); setCurrentMenu("contact")}}
+            >
+                CONTACT
+            </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden  font-bold">
+                <button onClick={() => setMenuOpen(!menuOpen)}>
+                    {menuOpen ? <Menu size={30}/>: <Menu size={30} />}
+                </button>
             </div>
         </div>
-    )
-}
+            <div
+                className={`
+                md:hidden fixed top-0 left-0 w-full h-screen
+                bg-white text-black shadow-md
+                transition-all duration-300 ease-in-out
+                z-40
+                ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"} 
+                `}
+                // To prevent clicks when hidden
+                style={{ pointerEvents: menuOpen ? "auto" : "none" }}
+            >
+            <div 
+                className="flex justify-end translate-x-[-10px] translate-y-[10px]">
+                <button 
+                    onClick={()=> {
+                        if(currentMenu === "home"){
+                            navigateTo("/")
+                        }else if(currentMenu === "profile"){
+                            navigateTo("/view/profile")
+                        }else if(currentMenu === "project"){
+                            navigateTo("/view/project")
+                        }else if(currentMenu === "contact"){
+                            navigateTo("/view/contact")
+                        }else{
+                            navigateTo("/")
+                        }
+                    }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-10">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </button>
+            </div>
+            <div className="flex flex-col items-center justify-center space-y-6 h-screen z-[-999]">
+                <button
+                    className="font-bold text-lg"
+                    onClick={() => {navigateTo("/"); setCurrentMenu("home")}}
+                >
+                    HOME
+                </button>
+                <button
+                    className="font-bold text-lg"
+                    onClick={() => {navigateTo("/view/profile"); setCurrentMenu("profile")}}
+                >
+                    PROFILE
+                </button>
+                <button
+                    className="font-bold text-lg"
+                    onClick={() => {navigateTo("/view/project");  setCurrentMenu("project")}}
+                >
+                    PROJECT
+                </button>
+                <button
+                    className="font-bold text-lg"
+                    onClick={() => {navigateTo("/view/contact");setCurrentMenu("contact")}}
+                >
+                    CONTACT
+                </button>
+                
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-40 rounded-lg z-[-999]"></div>
+        </div>
+        </div>
+    );
+};
 
-export default ComponentHeader
+export default ComponentHeader;

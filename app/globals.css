@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  @keyframes tilt-shaking {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .tilt-shake {
+    animation: tilt-shaking 0.5s ease-in-out infinite;
+  }
+
+  @keyframes skew-y-shaking {
+    0% { transform: skewY(-15deg); }
+    5% { transform: skewY(15deg); }
+    10% { transform: skewY(-15deg); }
+    15% { transform: skewY(15deg); }
+    20% { transform: skewY(0deg); }
+    100% { transform: skewY(0deg); }
+  }
+
+  .shake-y{
+    animation: skew-y-shaking ease-in-out infinite;
+  }
+
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

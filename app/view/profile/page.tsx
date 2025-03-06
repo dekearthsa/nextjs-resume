@@ -3,12 +3,22 @@
 import ComponentHeader from "../../component/ComponentHeader";
 import {CardData} from "../../types/index"
 import { useState,useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import ComponentCardDetail from "@/app/component/popup/ComponentCardDetail";
 
 const ViewProfilePage = () => {
 
     const [hover, setHover] = useState(999);
     const [btnName, setBtnName] = useState("Show More");
     const [showCard, setShowCard] = useState<CardData[]>([]);
+    const [openPopup, setOpenPopup] = useState(false);
+    const [dataInPopup, setDataInPopup] =useState<CardData>({
+        title: "",
+        imagePath: "https://www.mindphp.com/images/2022/07/jsts_1.png",
+        protocal:[],
+        jobs: [],
+        types: ""
+    });
 
     useEffect(()=> {
         setShowCard(skillArray.slice(0, 4));
@@ -24,6 +34,15 @@ const ViewProfilePage = () => {
             },index * 100); 
         });
     }, [showCard]);
+
+    const handlerOpenCard = (data: CardData) => {
+        setOpenPopup(true);
+        setDataInPopup(data);
+        // const sharBtn = document.querySelectorAll(`.card-btn-${data.title}`)
+        // sharBtn.forEach((el, idx) => {
+        //     el.classList.add("tilt-shake")
+        // })
+    }
 
     const handlerShowMore = () => {
         setShowCard((prev) => {
@@ -42,22 +61,22 @@ const ViewProfilePage = () => {
     
     const skillArray: CardData[] = [
         {
-            title:"JS/TS",
-            imagePath: "https://www.mindphp.com/images/2022/07/jsts_1.png",
-            jobs: ["express.js","fastiy.js","Next.js+tailwind","React.js+tailwind","Vue3.js+tailwind"],
+            title:"JS-TS",
+            imagePath: "https://www.masterborn.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2F6e7jqm4y92l8%2F5nzwwMXuigK9Bj1Z9zH5ZR%2F2ee18f6d393a3e814b23f30fb1c7deb3%2F210407_MB_blog_cover_TSvsJS.jpg&w=3840&q=75",
+            jobs: ["Express.js","Fastiy.js","Next.js+tailwind","React.js+tailwind","Vue3.js+tailwind"],
             protocal: ["http","wss","mqtt"],
             types: "code"
         },
         {
             title:"Python",
-            imagePath: "https://i0.wp.com/junilearning.com/wp-content/uploads/2020/06/python-programming-language.webp?w=1600&ssl=1",
+            imagePath: "https://pbs.twimg.com/media/DxMKNT5WoAIdciw?format=jpg&name=900x900",
             jobs: ["FaskAPI","Kivy","tensorflow","DataSCI-tools"],
             protocal: ["http","mqtt"],
             types: "code"
         },
         {
             title:"Dart",
-            imagePath: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Dart_programming_language_logo_icon.svg",
+            imagePath: "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fcbmk9vgy1w3zr7e2wd4l.jpg",
             jobs: ["Flutter"],
             protocal: ["http","mqtt"],
             types: "code"
@@ -78,58 +97,58 @@ const ViewProfilePage = () => {
         },
         {
             title:"C#",
-            imagePath: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Csharp_Logo.png",
+            imagePath: "https://miro.medium.com/v2/resize:fit:1340/format:webp/0*muNHqR0MMu2CjRbv.png",
             jobs: ["Unity C#"],
             protocal: ["GAME"],
-            types: "web-server"
+            types: "game"
         },
         {
             title:"C++",
-            imagePath: "https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg",
+            imagePath: "https://engineering.fb.com/wp-content/uploads/2015/06/1522635669452_11.jpg",
             protocal: ["http","mqtt"],
             jobs: ["ESP32 NodeMCU"],
             types: "code"
         },
         {
             title:"Database",
-            imagePath: "https://thumbs.dreamstime.com/b/database-icon-logo-modern-line-style-high-quality-black-outline-pictogram-web-site-design-mobile-apps-vector-80594008.jpg?w=768",
+            imagePath: "https://velog.velcdn.com/images/raiznn/post/fcfda92d-1d9b-4210-b610-e911c66f731f/image.png",
             protocal: ["NoSql","SQL"],
             jobs: ["MongoDB", "MySQL", "SQL server", "dynamodb", "datastore", "firestore"],
             types: "database"
         },
         {
             title:"WebServer",
-            imagePath: "https://as2.ftcdn.net/jpg/04/78/14/45/1000_F_478144585_wkOBc5k44OwpiJS544O6iDsbjbkdTtQK.webp",
-            protocal: ["Nginx"],
-            jobs: ["load balancer", "Install SSL", "Install Domain"],
-            types: "code"
+            imagePath: "https://osiwan.fr/wp-content/uploads/2024/02/istockphoto-1333400600-640x640-1.jpg",
+            protocal: ["Nginx open source"],
+            jobs: ["Load balancer", "Install SSL", "Install Domain", " Reverse proxy"],
+            types: "web-server"
         },
         {
             title:"OS",
-            imagePath: "https://logopond.com/logos/764befce2161b53b5895108e1e8597d7.png",
+            imagePath: "https://wallpapers.com/images/featured-full/ubuntu-en1fj9a0clgfvniv.jpg",
             protocal: ["Linux"],
             jobs: ["systemd", "cronjob"],
             types: "os"
         },
         {
             title:"Cloud",
-            imagePath: "https://as2.ftcdn.net/jpg/02/37/31/47/1000_F_237314729_632u9ZX7QXmPTcSXCcAmxDnvkyPwWoRS.webp",
-            protocal: ["Google cloud","AWS"],
-            jobs: ["AWS Lambda","WS greengrass", "AWS API gateway", 
-                "AWS dynamodb", "AWS apprunner", "WS Amplify", "AWS SQS", 
+            imagePath: "https://ditc.co.th/wp-content/uploads/2021/07/1-1066x800.jpg",
+            protocal: ["Google cloud","AWS", "Digital ocean"],
+            jobs: ["AWS Lambda","AWS greengrass", "AWS API gateway", 
+                "AWS dynamodb", "AWS apprunner", "AWS Amplify", "AWS SQS", 
                 "AWS EventBridge","AWS Container Registry", "AWS IoT Core", 
                 "AWS S3", "GCP cloud run", "GCP Datastore","GCP function", "GCP storage"],
             types: "cloud"
         },{
-            title:"Container",
-            imagePath: "https://static1.howtogeekimages.com/wordpress/wp-content/uploads/csit/2019/06/c454d054.png?q=50&fit=crop&w=767&h=&dpr=1.5",
+            title:"Containerization Platform",
+            imagePath: "https://static1.howtogeekimages.com/wordpress/wp-content/uploads/csit/2021/04/075c8694.jpeg?q=50&fit=crop&w=767&h=&dpr=1.5",
             protocal: ["Docker"],
             jobs: ["Docker", "Docker compose"],
             types: "container"
         },
         {
-            title: "Other tools",
-            imagePath: "https://as1.ftcdn.net/v2/jpg/02/58/92/94/1000_F_258929407_AHya3I8JQJvFEDrucAI3173HVp8CP59P.jpg",
+            title: "SAAS",
+            imagePath: "https://d3s3shtvds09gm.cloudfront.net/2dee2786ce465aba01318c864a632a09.jpg",
             protocal: [""],
             jobs:["Draw.io", "Excel", "Generative AI LLM (ChatGPT)"],
             types:"other"
@@ -174,6 +193,31 @@ const ViewProfilePage = () => {
 
     return (
         <div>
+            <AnimatePresence>
+                {
+                    openPopup && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[50]"
+                            onClick={()=> setOpenPopup(false)}
+                        >
+                            <div  className="bg-gray-500   rounded-2xl shadow-xl text-center w-[750px] h-[500px]">
+                                <ComponentCardDetail 
+                                    title={dataInPopup.title}
+                                    imagePath={dataInPopup.imagePath}
+                                    protocal={dataInPopup.protocal}
+                                    jobs={dataInPopup.jobs}
+                                    types={dataInPopup.types}
+                                />
+                            </div>
+                        </motion.div>
+                    )
+                }
+                
+            </AnimatePresence>
             <ComponentHeader/>
             <div className="mt-10 font-mono">
             <div className="text-[24px] font-bold flex justify-center">
@@ -207,10 +251,26 @@ const ViewProfilePage = () => {
                     </div>
                     <div className="set-up-grid">
                         <div className="">
+                            <div>GITHUB:</div>
+                        </div>
+                        <div>
+                            <div>
+                                <a href="https://github.com/dekearthsa" target="_blank">
+                                    https://github.com/dekearthsa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="set-up-grid">
+                        <div className="">
                             <div>PAGE:</div>
                         </div>
                         <div>
-                            <div>https://www.tiktok.com/@coding.aroi</div>
+                            <div>
+                                <a href="https://www.tiktok.com/@coding.aroi" target="_blank">
+                                    https://www.tiktok.com/@coding.aroi
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,7 +300,6 @@ const ViewProfilePage = () => {
                         </div>
                     </div>
                 </div>
-                
                 <div className="fade-ins-4 opacity-0 translate-y-[-2.5rem] duration-500">
                     <div className="set-up-grid mt-10">
                         <div>
@@ -249,13 +308,14 @@ const ViewProfilePage = () => {
                         <div className="grid grid-cols-4 mb-10">
                             {
                                 showCard.map((data: CardData, idx) => (
-                                    <div key={idx} className={`card-con fade-ins-4 opacity-0 translate-y-[-2.5rem] duration-500`} >
+                                    <div key={idx} className={` card-con fade-ins-4 opacity-0 translate-y-[-2.5rem] duration-500`} >
                                         <button
-                                            className={`mt-10 relative w-60 h-[300px] bg-gray-900 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-500 ${
+                                            className={`card-btn-${data.title} mt-10 relative w-60 h-[300px] bg-gray-900 rounded-lg overflow-hidden shadow-lg transform transition-transform duration-500 ${
                                                 hover === idx ? "scale-105 rotate-3" : "scale-100"
                                             }`}
                                             onMouseEnter={() => setHover(idx)}
                                             onMouseLeave={() => setHover(999)}
+                                            onClick={()=> handlerOpenCard(data)}
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-80"></div>
                                             <img src={data.imagePath} className="w-full h-full object-cover" />
