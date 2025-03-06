@@ -1,7 +1,6 @@
 'use client';
 import { CardData } from "../../types/index";
 import { motion } from "framer-motion";  
-import { useState } from "react";
 const ComponentCardDetail: React.FC<CardData> = ({
     title,
     imagePath,

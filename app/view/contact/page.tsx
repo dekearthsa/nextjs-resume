@@ -1,159 +1,160 @@
-"use client"
+// "use client"
 
-import ComponentHeader from "../../component/ComponentHeader";
-import Image from "next/image";
-import Script from "next/script";
-import { useState } from "react";
+// import ComponentHeader from "../../component/ComponentHeader";
+// import Image from "next/image";
+// import Script from "next/script";
+// import { useState } from "react";
 
-interface OmiseCardType {
-    configure: (config: {
-        publicKey: string;
-        currency: string;
-        frameLabel: string;
-        submitLabel: string;
-        buttonLabel: string;
-    }) => void;
-    configureButton: (selector: string) => void;
-    attach: () => void;
-    open: (config: {
-        amount: number;
-        onCreateTokenSuccess: (token: string) => void;
-        onFormClosed: () => void;
-    }) => void;
-}
+// interface OmiseCardType {
+//     configure: (config: {
+//         publicKey: string;
+//         currency: string;
+//         frameLabel: string;
+//         submitLabel: string;
+//         buttonLabel: string;
+//     }) => void;
+//     configureButton: (selector: string) => void;
+//     attach: () => void;
+//     open: (config: {
+//         amount: number;
+//         onCreateTokenSuccess: (token: string) => void;
+//         onFormClosed: () => void;
+//     }) => void;
+// }
 
-let OmiseCard: OmiseCardType | undefined;
+// let OmiseCard: OmiseCardType | undefined;
 
 const ViewContact = () => {
-    const [loading, setLoading] = useState(false);
-    const [amount, setAmount] = useState(0);
-    const [isPackage, setPackage] = useState("");
+//     const [loading, setLoading] = useState(false);
+//     const [amount, setAmount] = useState(0);
+//     const [isPackage, setPackage] = useState("");
 
-    const handleLoadScript = () => {
-        OmiseCard = (window as any).OmiseCard;
-        OmiseCard.configure({
-            publicKey: "pkey_test_5x6z2poriuh0aisxnp2",
-            currency: "THB",
-            frameLabel: "Demo-test-shop",
-            submitLabel: "Pay NOW",
-            buttonLabel: "Pay with Omise",
-        });
-    };
+//     const handleLoadScript = () => {
+//         OmiseCard = (window as any).OmiseCard;
+//         OmiseCard.configure({
+//             publicKey: "pkey_test_5x6z2poriuh0aisxnp2",
+//             currency: "THB",
+//             frameLabel: "Demo-test-shop",
+//             submitLabel: "Pay NOW",
+//             buttonLabel: "Pay with Omise",
+//         });
+//     };
 
-    const creditCardConfigure = () => {
-        if (!OmiseCard) return;
-        OmiseCard.configure({
-            defaultPaymentMethod: "credit_card",
-            otherPaymentMethods: ["promptpay", "mobile_banking_bbl"],
-        });
-        OmiseCard.configureButton("#credit-card");
-        OmiseCard.attach();
-    };
+//     const creditCardConfigure = () => {
+//         if (!OmiseCard) return;
+//         OmiseCard.configure({
+//             defaultPaymentMethod: "credit_card",
+//             otherPaymentMethods: ["promptpay", "mobile_banking_bbl"],
+//         });
+//         OmiseCard.configureButton("#credit-card");
+//         OmiseCard.attach();
+//     };
 
-    const haddlePromptpay = () => {
-        if (!OmiseCard) return;
-        OmiseCard.configure({
-            defaultPaymentMethod: "promptpay",
-            otherPaymentMethods: ["credit_card", "mobile_banking_bbl"],
-        });
-        OmiseCard.configureButton("#promptpay");
-        OmiseCard.attach();
-    }
+//     const haddlePromptpay = () => {
+//         if (!OmiseCard) return;
+//         OmiseCard.configure({
+//             defaultPaymentMethod: "promptpay",
+//             otherPaymentMethods: ["credit_card", "mobile_banking_bbl"],
+//         });
+//         OmiseCard.configureButton("#promptpay");
+//         OmiseCard.attach();
+//     }
 
-    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>,paymentType: string) => {
-        if (paymentType === "creditCard"){
-            if(amount <= 0){
-                alert("Empty payment!");
-                return;
-            }else{
-                e.preventDefault();
-                creditCardConfigure();
-                OmiseCard?.open({
-                    amount: amount, // 100 THB in satangs
-                    onCreateTokenSuccess: async (token) => {
-                    setLoading(true);
-                    try {
-                        console.log("token:", token)
-                        const response = await fetch("http://localhost:9932/api/payment", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                token,
-                                amount: amount,
-                            }),
-                        });
-                        console.log("response => ",response)
-                        const result = await response.json();
-                        if (result.message === "success") {
-                            alert("Payment Successful!");
-                        } else {
-                            alert("Payment Failed: " + result.message);
-                        }
-                    } catch (error) {
-                        alert("Payment Error: " + error);
-                    } finally {
-                        setLoading(false);
-                    }
-                },
-                onFormClosed: () => {
-                    setLoading(false);
-                },
-                });
-            }  
-        }else{
-            if(amount <= 0){
-                alert("Empty payment!");
-                return;
-            }else{
-                e.preventDefault();
-                haddlePromptpay();
-                OmiseCard?.open({
-                    amount: amount, // 100 THB in satangs
-                    onCreateTokenSuccess: async (token) => {
-                    setLoading(true);
-                    try {
-                        const response = await fetch("http://localhost:9932/api/payment", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                token,
-                                amount: amount,
-                                method: "qrcode"
-                            }),
-                        });
-                        console.log("response => ",response)
-                        const result = await response.json();
-                        if (result.message === "success") {
-                            alert("Payment Successful!");
-                        } else {
-                            alert("Payment Failed: " + result.message);
-                        }
-                    } catch (error) {
-                        alert("Payment Error: " + error);
-                    } finally {
-                        setLoading(false);
-                    }
-                },
-                onFormClosed: () => {
-                    setLoading(false);
-                },
-                });
-            }
-        }
-};
+//     const handleClick = async (e: React.MouseEvent<HTMLButtonElement>,paymentType: string) => {
+//         if (paymentType === "creditCard"){
+//             if(amount <= 0){
+//                 alert("Empty payment!");
+//                 return;
+//             }else{
+//                 e.preventDefault();
+//                 creditCardConfigure();
+//                 OmiseCard?.open({
+//                     amount: amount, // 100 THB in satangs
+//                     onCreateTokenSuccess: async (token) => {
+//                     setLoading(true);
+//                     try {
+//                         console.log("token:", token)
+//                         const response = await fetch("http://localhost:9932/api/payment", {
+//                             method: "POST",
+//                             headers: {
+//                                 "Content-Type": "application/json",
+//                             },
+//                             body: JSON.stringify({
+//                                 token,
+//                                 amount: amount,
+//                             }),
+//                         });
+//                         console.log("response => ",response)
+//                         const result = await response.json();
+//                         if (result.message === "success") {
+//                             alert("Payment Successful!");
+//                         } else {
+//                             alert("Payment Failed: " + result.message);
+//                         }
+//                     } catch (error) {
+//                         alert("Payment Error: " + error);
+//                     } finally {
+//                         setLoading(false);
+//                     }
+//                 },
+//                 onFormClosed: () => {
+//                     setLoading(false);
+//                 },
+//                 });
+//             }  
+//         }else{
+//             if(amount <= 0){
+//                 alert("Empty payment!");
+//                 return;
+//             }else{
+//                 e.preventDefault();
+//                 haddlePromptpay();
+//                 OmiseCard?.open({
+//                     amount: amount, // 100 THB in satangs
+//                     onCreateTokenSuccess: async (token) => {
+//                     setLoading(true);
+//                     try {
+//                         const response = await fetch("http://localhost:9932/api/payment", {
+//                             method: "POST",
+//                             headers: {
+//                                 "Content-Type": "application/json",
+//                             },
+//                             body: JSON.stringify({
+//                                 token,
+//                                 amount: amount,
+//                                 method: "qrcode"
+//                             }),
+//                         });
+//                         console.log("response => ",response)
+//                         const result = await response.json();
+//                         if (result.message === "success") {
+//                             alert("Payment Successful!");
+//                         } else {
+//                             alert("Payment Failed: " + result.message);
+//                         }
+//                     } catch (error) {
+//                         alert("Payment Error: " + error);
+//                     } finally {
+//                         setLoading(false);
+//                     }
+//                 },
+//                 onFormClosed: () => {
+//                     setLoading(false);
+//                 },
+//                 });
+//             }
+//         }
+// };
 
-    const packageSelection = (pk:string, amount:number) => {
-        setAmount(amount)
-        setPackage(pk)
-    }
+//     const packageSelection = (pk:string, amount:number) => {
+//         setAmount(amount)
+//         setPackage(pk)
+//     }
 
     return (
     <div>
-        <ComponentHeader/>
+        Hello world
+        {/* <ComponentHeader/>
         <div className="own-form">
         <Script
             src="https://cdn.omise.co/omise.js"
@@ -299,7 +300,7 @@ const ViewContact = () => {
                     </div>
                 </div>
         }
-        
+         */}
     </div>
   );
 };
