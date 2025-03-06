@@ -13,16 +13,17 @@ export default function MagicEffect() {
   }, []);
 
   return (
-    <div className="z-[-99] absolute  bg-black text-white   top-0 left-0">
-      <div
-        className="fixed inset-0"
-        style={{
-          background: `radial-gradient(circle at ${gradientPosition.x}px ${gradientPosition.y}px, transparent, #000 30%)`,
-        }}
-      ></div>
- 
-        <img className="object-cover" src="https://images.steamusercontent.com/ugc/4040836197670231/1EF904621DB29AA3A902F7AE31F4FBA8A9B19842/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"/>
- 
-    </div>
+    <div>
+          <div className="z-[1] absolute  bg-black text-white   top-0 left-0">
+            <div
+              className="fixed inset-0"
+              style={{background: `radial-gradient(circle at ${gradientPosition.x}px ${gradientPosition.y}px, transparent, #000 30%)`,}}></div>
+          </div>
+          <img
+            src="https://images.steamusercontent.com/ugc/4040836197670231/1EF904621DB29AA3A902F7AE31F4FBA8A9B19842/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+            alt="Background"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
   );
 }

@@ -4,7 +4,7 @@ import Image from 'next/image';
 interface SlideshowProps {
     images: string[];
     autoPlay?: boolean;
-    autoPlayInterval?: number; // in milliseconds
+    autoPlayInterval?: number;
 }
 
 const Slideshow: React.FC<SlideshowProps> = ({
@@ -43,7 +43,6 @@ const Slideshow: React.FC<SlideshowProps> = ({
 
     return (
     <div className="">
-      {/* Slides */}
         <div className="overflow-hidden rounded-lg">
             {images.map((src, index) => (
         <div
@@ -66,8 +65,6 @@ const Slideshow: React.FC<SlideshowProps> = ({
         </div>
         ))}
     </div>
-
-      {/* Pagination Indicators */}
     <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
         {images.map((_, index) => (
             <button
@@ -83,8 +80,6 @@ const Slideshow: React.FC<SlideshowProps> = ({
             ))
         }
     </div>
-
-      {/* Previous Button */}
       <button
         type="button"
         onClick={handlePrev}
@@ -109,8 +104,6 @@ const Slideshow: React.FC<SlideshowProps> = ({
           <span className="sr-only">Previous</span>
         </span>
       </button>
-
-      {/* Next Button */}
       <button
         type="button"
         onClick={handleNext}

@@ -14,16 +14,14 @@ const ComponentHeader = () => {
     };
 
     return (
-        <div className="shadow-md w-full sticky top-0 z-50 text-white">
+        <div className="shadow-md w-full relative top-0 z-50 text-white">
         <div className="flex justify-between items-center p-5 md:px-10">
-            {/* Logo */}
             <button
             className="font-bold text-xl"
             onClick={() => {navigateTo("/"); setCurrentMenu("home")}}
             >
             LOGO
             </button>
-            {/* Desktop Menu */}
             <div className="hidden md:flex space-x-10">
             <button
                 className="font-bold hover:scale-110 transition duration-300"
@@ -50,8 +48,6 @@ const ComponentHeader = () => {
                 CONTACT
             </button>
             </div>
-
-            {/* Mobile Menu Button */}
             <div className="md:hidden  font-bold">
                 <button onClick={() => setMenuOpen(!menuOpen)}>
                     {menuOpen ? <Menu size={30}/>: <Menu size={30} />}
@@ -64,9 +60,8 @@ const ComponentHeader = () => {
                 bg-white text-black shadow-md
                 transition-all duration-300 ease-in-out
                 z-40
-                ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"} 
+                ${menuOpen ? "opacity-90 translate-y-0" : "opacity-0 -translate-y-full"} 
                 `}
-                // To prevent clicks when hidden
                 style={{ pointerEvents: menuOpen ? "auto" : "none" }}
             >
             <div 

@@ -12,8 +12,8 @@ const ComponentImageFullScreen: React.FC<ComponentImageFullScreenProps> = ({imgP
             <Image
                 src={pathImage}
                 alt="Company Logo"
-                width={1000} // Desired width
-                height={600} // Desired height
+                width={1000}
+                height={600} 
                 objectFit="cover"
             />
         </div>

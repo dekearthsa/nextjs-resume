@@ -14,17 +14,6 @@ export default function Home() {
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  const [gradientPosition, setGradientPosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e:MouseEvent) => {
-      setGradientPosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   useEffect(() => {
     const handleType = () => {
       const currentIndex = loopNum % arrayTitle.length;
@@ -37,11 +26,9 @@ export default function Home() {
         return updatedText;
       });
 
-      // Adjust typing speed for deleting vs typing
       setTypingSpeed(isDeleting ? 100 : 150);
 
       if (!isDeleting && text === fullText) {
-        // Pause before starting to delete
         setTimeout(() => setIsDeleting(true), 3000);
       } else if (isDeleting && text === "") {
         setIsDeleting(false);
@@ -57,19 +44,7 @@ export default function Home() {
   return (
     <div>
         <ComponentHeader/>
-        <div className="z-[1] absolute  bg-black text-white   top-0 left-0">
-              <div
-                className="fixed inset-0"
-                style={{
-                  background: `radial-gradient(circle at ${gradientPosition.x}px ${gradientPosition.y}px, transparent, #000 30%)`,
-                }}
-              ></div>
-            </div>
-        <img
-          src="https://images.steamusercontent.com/ugc/4040836197670231/1EF904621DB29AA3A902F7AE31F4FBA8A9B19842/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
-          alt="Background"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+        <MagicEffect/>
         <div className="fixed w-full z-[2]  mt-[350px] md:mt-[200px]">
           <div className="font-mono">
             <div className=" flex justify-center items-center">
@@ -90,11 +65,7 @@ export default function Home() {
             </a>
           </div>
         </div>
-        
       </div>
-          {/* <MagicEffect/> */}
-
-          
     </div>
   );
 }
