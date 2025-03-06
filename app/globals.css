@@ -27,9 +27,7 @@
   .shake-y{
     animation: skew-y-shaking ease-in-out infinite;
   }
-
 }
-
 
 :root {
   --background: #ffffff;
@@ -80,7 +78,6 @@ body {
   grid-template-columns: 1fr 4fr;
 }
 
-
-.silder-img{
-  
+.set-up-grid-1{
+  display: grid;
 }

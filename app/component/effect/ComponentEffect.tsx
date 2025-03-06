@@ -22,7 +22,7 @@ export default function MagicEffect() {
           <img
             src="https://images.steamusercontent.com/ugc/4040836197670231/1EF904621DB29AA3A902F7AE31F4FBA8A9B19842/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
             alt="Background"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full md:object-cover object-cover object-[90%_0%]"
           />
         </div>
   );
