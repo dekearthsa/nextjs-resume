@@ -1,308 +1,451 @@
-// "use client"
+"use client";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import ComponentHeader from "../../component/ComponentHeader";
+import { motion } from "framer-motion";
+import { StructProject } from "../../types/index";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCards } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/effect-cards";
 
-// import ComponentHeader from "../../component/ComponentHeader";
-// import Image from "next/image";
-// import Script from "next/script";
-// import { useState } from "react";
+export default function Home() {
+  const heroRef = useRef(null);
+  const productRef = useRef(null);
+  const featureRef = useRef(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
+  const steps = ["Concept", "Design", "Create app", "AI v.0", "AI v.1"];
+  const myFaverPro = [
+    "The goal of this project is to develop a data collection system for controlling 12 heliostats and utilize the collected data to train an AI model for improved automation.",
+    "Phase 1: Designing the Heliostat Data Collection System (Server-Side) In this phase, the focus is on designing the server-side data collection system for heliostats while ensuring minimal or no modifications to the hardware code. The data structure consists of three key components: Image Cropping System – A module for processing image data. Manual Data Logging System – A system for user-initiated data collection. Automated Data Logging System – A system that autonomously collects heliostat data.",
+    "Phase 2: Developing the Desktop Application A desktop application is developed using Python and the Kivy framework to manage and control the data collection process. Key features of this application include: Manual control of heliostats. Fine-tuning motor sensitivity (adjusting Kp, Ki, Kd, speed, step parameters). Setting the initial position of heliostats. Updating the database (MySQL) for better data organization. Implementing an auto-tracking system for 12 heliostats to automate movement and data collection.",
+    "Phase 3: AI Model Training and Optimization The data collected in Phase 2 is used to train multiple AI models to compare their effectiveness. This phase also includes: Hyperparameter tuning and model fine-tuning. Data preprocessing, such as adding additional parameters, performing oversampling, and feature extraction to enhance model performance.",
+    "Phase 4: Model Deployment and Automation Once the optimal model and hyperparameters are identified, the final model is retrained and deployed automatically at the end of each day using an auto-deployment system to ensure continuous updates and improvements.",
+  ];
 
-// interface OmiseCardType {
-//     configure: (config: {
-//         publicKey: string;
-//         currency: string;
-//         frameLabel: string;
-//         submitLabel: string;
-//         buttonLabel: string;
-//     }) => void;
-//     configureButton: (selector: string) => void;
-//     attach: () => void;
-//     open: (config: {
-//         amount: number;
-//         onCreateTokenSuccess: (token: string) => void;
-//         onFormClosed: () => void;
-//     }) => void;
-// }
+  const arrayProject: StructProject[] = [
+    {
+      name: "Solar thermal",
+      img: "/solar/fi_s1.png",
+      desc: "Create landing page with vue2 framework.",
+    },
+    {
+      name: "Shopping tour",
+      img: "/tour/t1.png",
+      desc: "sdfsdfad",
+    },
+    {
+      name: "Docare",
+      img: "/docare/do1.png",
+      desc: "Website for admin in hospital for alert accident and send location to admin using vue3.",
+    },
+    {
+      name: "Flood Line support Document",
+      img: "/flood/flood.png",
+      desc: "Line bot for goverment to find water block nearest location using python flask API.",
+    },
+    {
+      name: "Sookyen",
+      img: "/sookyen/sk1.png",
+      desc: "sdfssdffgtdfsdf",
+    },
+    {
+      name: "wb",
+      img: "/wb/wb2.png",
+      desc: "asdsdfdgfhfghfgh",
+    },
+  ];
 
-// let OmiseCard: OmiseCardType | undefined;
+  // const renderDesc = () => {
+  //   return (
+  //     <div>
+  //       <p>{arrayProject[activeIndex].desc}</p>
+  //     </div>
+  //   );
+  // };
+  // useEffect(() => {
+  //   console.log(activeIndex);
+  //   renderDesc();
+  // }, [activeIndex]);
+  // Intersection Observer for section animations (unchanged)
+  useEffect(() => {
+    const sections = [heroRef.current, productRef.current, featureRef.current];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("opacity-0");
+            entry.target.classList.add("animate-fadeInUp");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    sections.forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+    return () => {
+      sections.forEach((section) => {
+        if (section) observer.unobserve(section);
+      });
+    };
+  }, []);
 
-const ViewContact = () => {
-//     const [loading, setLoading] = useState(false);
-//     const [amount, setAmount] = useState(0);
-//     const [isPackage, setPackage] = useState("");
+  return (
+    <main className="mx-auto">
+      {/* Component Header */}
+      <div className="shadow-2xl">
+        <ComponentHeader />
+      </div>
 
-//     const handleLoadScript = () => {
-//         OmiseCard = (window as any).OmiseCard;
-//         OmiseCard.configure({
-//             publicKey: "pkey_test_5x6z2poriuh0aisxnp2",
-//             currency: "THB",
-//             frameLabel: "Demo-test-shop",
-//             submitLabel: "Pay NOW",
-//             buttonLabel: "Pay with Omise",
-//         });
-//     };
+      {/* Hero Section */}
+      <section
+        ref={heroRef}
+        className="
+          text-gray-600
+          opacity-0
+          z-[999]
+          flex
+          flex-col
+          items-center
+          justify-center
+          text-center
+          min-h-screen         /* Changed to min-h-screen for better responsiveness on phones */
+          bg-gray-300
+          px-4
+          relative            /* Make sure this section can position children absolutely if needed */
+        "
+      >
+        {/* Floating Images */}
+        <div className="absolute top-0 left-0">
+          <Image
+            ref={imageRef}
+            className="
+              im-1 
+              w-[250px] 
+              h-[250px] 
+              object-cover 
+              rounded-full 
+              shadow-2xl 
+              animate-wiggle 
+              mt-[100px] 
+              ml-[50px]
+              sm:w-[300px]
+              sm:h-[300px]
+            "
+            src={"/flood/flood.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
+        </div>
+        <div className="absolute top-0 left-[60%]">
+          <Image
+            ref={imageRef}
+            className="
+              im-4
+              rounded-full
+              w-[250px]
+              h-[250px]
+              object-cover
+              animate-wiggle2
+              mt-[60px]
+              ml-[20px]
+              shadow-2xl
+              sm:w-[300px]
+              sm:h-[300px]
+              sm:ml-[100px]
+            "
+            src={"/sookyen/sk1.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
+        </div>
+        <div className="absolute top-[50%] left-[50%]">
+          <Image
+            ref={imageRef}
+            className="
+              im-2
+              rounded-full
+              w-[200px]
+              h-[200px]
+              object-cover
+              animate-wiggle
+              mt-[60px]
+              ml-[100px]
+              shadow-2xl
+              sm:w-[300px]
+              sm:h-[300px]
+              sm:ml-[250px]
+            "
+            src={"/docare/do1.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
+        </div>
+        <div className="absolute top-[60%] left-[5%]">
+          <Image
+            ref={imageRef}
+            className="
+              im-3
+              rounded-full
+              w-[200px]
+              h-[200px]
+              object-cover
+              animate-wiggle2
+              mt-[20px]
+              ml-[50px]
+              shadow-2xl
+              z-10
+              sm:w-[300px]
+              sm:h-[300px]
+              sm:ml-[150px]
+            "
+            src={"/solar/s1.png"}
+            alt=""
+            width={300}
+            height={300}
+          />
+        </div>
 
-//     const creditCardConfigure = () => {
-//         if (!OmiseCard) return;
-//         OmiseCard.configure({
-//             defaultPaymentMethod: "credit_card",
-//             otherPaymentMethods: ["promptpay", "mobile_banking_bbl"],
-//         });
-//         OmiseCard.configureButton("#credit-card");
-//         OmiseCard.attach();
-//     };
+        {/* Main Text */}
+        <h1 className="text-3xl sm:text-4xl font-semibold mb-4 mt-[-30px]">
+          Welcome to My Little Creation
+        </h1>
+        <p className="text-base sm:text-lg mb-6 max-w-xl">
+          This is just a glimpse of what I’ve created. Click below to explore
+          more!
+        </p>
+        <button
+          className="
+            px-6 
+            py-3 
+            rounded-full 
+            bg-blue-600 
+            text-white 
+            hover:bg-blue-800 
+            transition-all 
+            z-10
+            text-sm
+            sm:text-base
+          "
+        >
+          Discover My Project
+        </button>
 
-//     const haddlePromptpay = () => {
-//         if (!OmiseCard) return;
-//         OmiseCard.configure({
-//             defaultPaymentMethod: "promptpay",
-//             otherPaymentMethods: ["credit_card", "mobile_banking_bbl"],
-//         });
-//         OmiseCard.configureButton("#promptpay");
-//         OmiseCard.attach();
-//     }
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30 pointer-events-none" />
+      </section>
 
-//     const handleClick = async (e: React.MouseEvent<HTMLButtonElement>,paymentType: string) => {
-//         if (paymentType === "creditCard"){
-//             if(amount <= 0){
-//                 alert("Empty payment!");
-//                 return;
-//             }else{
-//                 e.preventDefault();
-//                 creditCardConfigure();
-//                 OmiseCard?.open({
-//                     amount: amount, // 100 THB in satangs
-//                     onCreateTokenSuccess: async (token) => {
-//                     setLoading(true);
-//                     try {
-//                         console.log("token:", token)
-//                         const response = await fetch("http://localhost:9932/api/payment", {
-//                             method: "POST",
-//                             headers: {
-//                                 "Content-Type": "application/json",
-//                             },
-//                             body: JSON.stringify({
-//                                 token,
-//                                 amount: amount,
-//                             }),
-//                         });
-//                         console.log("response => ",response)
-//                         const result = await response.json();
-//                         if (result.message === "success") {
-//                             alert("Payment Successful!");
-//                         } else {
-//                             alert("Payment Failed: " + result.message);
-//                         }
-//                     } catch (error) {
-//                         alert("Payment Error: " + error);
-//                     } finally {
-//                         setLoading(false);
-//                     }
-//                 },
-//                 onFormClosed: () => {
-//                     setLoading(false);
-//                 },
-//                 });
-//             }  
-//         }else{
-//             if(amount <= 0){
-//                 alert("Empty payment!");
-//                 return;
-//             }else{
-//                 e.preventDefault();
-//                 haddlePromptpay();
-//                 OmiseCard?.open({
-//                     amount: amount, // 100 THB in satangs
-//                     onCreateTokenSuccess: async (token) => {
-//                     setLoading(true);
-//                     try {
-//                         const response = await fetch("http://localhost:9932/api/payment", {
-//                             method: "POST",
-//                             headers: {
-//                                 "Content-Type": "application/json",
-//                             },
-//                             body: JSON.stringify({
-//                                 token,
-//                                 amount: amount,
-//                                 method: "qrcode"
-//                             }),
-//                         });
-//                         console.log("response => ",response)
-//                         const result = await response.json();
-//                         if (result.message === "success") {
-//                             alert("Payment Successful!");
-//                         } else {
-//                             alert("Payment Failed: " + result.message);
-//                         }
-//                     } catch (error) {
-//                         alert("Payment Error: " + error);
-//                     } finally {
-//                         setLoading(false);
-//                     }
-//                 },
-//                 onFormClosed: () => {
-//                     setLoading(false);
-//                 },
-//                 });
-//             }
-//         }
-// };
+      {/* Product Section */}
+      <section
+        ref={productRef}
+        className="
+          m-auto
+          opacity-0
+          flex 
+          flex-col
+          md:flex-row
+          items-start     /* top-align on bigger screens */
+          gap-8
+          min-h-[50vh]
+          p-4            /* some padding on mobile */
+        "
+      >
+        {/* Left Column: Content */}
+        <div className="w-full md:w-1/2">
+          <div>
+            <div className="h-auto mb-4">
+              <h2 className="text-2xl sm:text-3xl font-semibold mb-4 z-10">
+                Solar thermal
+              </h2>
+              <p className="text-sm sm:text-base mb-6 z-10">
+                {myFaverPro[currentStep]}
+              </p>
+            </div>
 
-//     const packageSelection = (pk:string, amount:number) => {
-//         setAmount(amount)
-//         setPackage(pk)
-//     }
-
-    return (
-    <div>
-        Hello world
-        {/* <ComponentHeader/>
-        <div className="own-form">
-        <Script
-            src="https://cdn.omise.co/omise.js"
-            onLoad={handleLoadScript}
-        />
-    </div>
-    <div className="flex justify-center mt-10">
-        <div className="mt-10">Contact page</div>
-    </div>
-    <div className="flex justify-around mt-10">
-        <div className="w-[300px] h-[350px] border-[1px] border-gray-300 rounded-lg">
+            {/* Steps */}
             <div>
-                <Image
-                    className="w-[100%] h-[250px] rounded-t-lg object-cover"
-                    src={"/payment/c_s.png"}
-                    width={1000}
-                    height={100}
-                    alt={"aa"}
-                />
-            </div>
-            <div className="flex justify-center mt-10">
-                <button
-                    className="bg-gray-600 w-[140px] h-[40px] rounded-lg"
-                    onClick={()=>{
-                        packageSelection("small-package", 1000)
+              <div className="relative w-full sm:w-[80%] flex items-center justify-between overflow-x-auto">
+                {steps.map((step, index) => (
+                  <div
+                    key={index}
+                    className="relative flex flex-col items-center mr-2"
+                  >
+                    <motion.div
+                      className={`
+                        w-8 h-8 sm:w-10 sm:h-10
+                        flex items-center justify-center
+                        mt-4 sm:mt-10
+                        z-[9]
+                        rounded-full
+                        cursor-pointer
+                        ${
+                          index <= currentStep
+                            ? "bg-blue-500 text-white"
+                            : "bg-gray-300 text-gray-500"
+                        }
+                      `}
+                      onClick={() => setCurrentStep(index)}
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: index === currentStep ? 1.2 : 1 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      {index + 1}
+                    </motion.div>
+                    <button
+                      onClick={() => setCurrentStep(index)}
+                      className="text-xs sm:text-sm mt-2 z-[999] whitespace-nowrap"
+                    >
+                      {step}
+                    </button>
+                  </div>
+                ))}
+
+                {/* Animated Progress Line */}
+                <div className="absolute top-[50%] left-0 w-full h-2 bg-gray-300">
+                  <motion.div
+                    className="h-2 bg-blue-500"
+                    initial={{ width: "0%" }}
+                    animate={{
+                      width: `${(currentStep / (steps.length - 1)) * 100}%`,
                     }}
-                >
-                    10 THB
-                </button>
-            </div>
-        </div>
-        <div className="w-[300px] h-[350px] border-[1px] border-gray-300 rounded-lg">
-            <div>
-                <Image
-                    className="w-[100%] h-[250px] rounded-t-lg object-cover"
-                    src={"/payment/c_m.png"}
-                    width={1000}
-                    height={100}
-                    alt={"aa"}
-                />
-            </div>
-            
-            <div className="flex justify-center mt-10">
-                <button
-                    className="bg-gray-600 w-[140px] h-[40px] rounded-lg"
-                    onClick={()=>{
-                        packageSelection("md-package", 3000)
-                    }}
-                >
-                    30 THB
-                </button>
-            </div>
-        </div>
-        <div className="w-[300px] h-[350px] border-[1px] border-gray-300 rounded-lg">
-        <div>
-                <Image
-                    className="w-[100%] h-[250px] rounded-t-lg object-cover"
-                    src={"/payment/c_h.png"}
-                    width={1000}
-                    height={100}
-                    alt={"aa"}
-                />
-            </div>
-            <div className="flex justify-center mt-10">
-                <button
-                    className="bg-gray-600 w-[140px] h-[40px] rounded-lg"
-                    onClick={()=>{
-                        packageSelection("hg-package", 4000)
-                    }}
-                >
-                    40 THB
-                </button>
-            </div>
-        </div>
-        </div>
-        <div>
-            <div className="text-center mt-[100px] font-bold">
-                {
-                    isPackage?<h1>Package selection {isPackage}</h1>:""
-                }
-                {
-                    amount?<h1>{amount/100} THB</h1> :""
-                }
-            </div>
-        </div>
-        {
-            amount <= 0? 
-                <div className="flex justify-around" >
-                    <div className="text-center mt-[60px]">
-                        <form>
-                            <button
-                                className="bg-gray-500  p-2 w-[200px] font-bold rounded-xl"
-                                id="credit-card"
-                                type="button"
-                                onClick={(e) => handleClick(e,"creditCard")}
-                                disabled={true}
-                            >
-                                {loading ? "Processing..." : "ชำระเงินด้วยบัตรเครดิต"}
-                            </button>
-                        </form>
-                    </div>
-                    <div className="text-center mt-[60px]">
-                        <form>
-                            <button
-                                className="bg-gray-500  p-2 w-[200px] font-bold rounded-xl"
-                                id="promptpay"
-                                type="button"
-                                onClick={(e) => handleClick(e,"promptpay")}
-                                disabled={true}
-                            >
-                                {loading ? "Processing..." : "promptpay"}
-                            </button>
-                        </form>
-                    </div>
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  />
                 </div>
-            :
-            <div className="flex justify-around">
-                    <div className="text-center mt-[60px]">
-                        <form>
-                            <button
-                                className="bg-blue-700  p-2 w-[200px] font-bold rounded-xl"
-                                id="credit-card"
-                                type="button"
-                                onClick={(e) => handleClick(e,"creditCard")}
-                                disabled={loading}
-                            >
-                                {loading ? "Processing..." : "ชำระเงินด้วยบัตรเครดิต"}
-                            </button>
-                        </form>
-                    </div>
-                    <div className="text-center mt-[60px]">
-                        <form>
-                            <button
-                                className="bg-blue-700  p-2 w-[200px] font-bold rounded-xl"
-                                id="promptpay"
-                                type="button"
-                                onClick={(e) => handleClick(e,"promptpay")}
-                                disabled={loading}
-                            >
-                                {loading ? "Processing..." : "promptpay"}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-        }
-         */}
-    </div>
+              </div>
+            </div>
+            <button
+              className="
+                mt-6 
+                px-6 
+                py-2 
+                sm:py-3 
+                z-10 
+                rounded-full 
+                bg-blue-600 
+                text-white 
+                hover:bg-blue-800 
+                transition-all
+                text-sm
+                sm:text-base
+              "
+            >
+              Read more
+            </button>
+          </div>
+        </div>
+
+        {/* Right Column: Image */}
+        <div className="w-full md:w-1/2 flex justify-center mt-4 md:mt-0">
+          <div className="relative max-w-full overflow-hidden">
+            <img
+              src="/solar/fi_s1.png"
+              alt=""
+              className="
+                object-cover
+                w-full
+                h-auto
+                md:max-h-[400px]  /* limit height on desktop */
+                rounded-md
+              "
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black opacity-30 pointer-events-none" />
+          </div>
+        </div>
+      </section>
+
+      {/* Feature Section */}
+      <section
+        ref={featureRef}
+        className="
+          opacity-0
+          py-16
+          px-4
+          text-center
+          bg-gray-300
+          relative
+        "
+      >
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-12 z-[999] text-white">
+          Another Project
+        </h2>
+        <div
+          className="
+            flex
+            flex-col
+            md:flex-row
+            gap-8
+            justify-center
+            items-start
+            md:items-center
+            w-full
+          "
+        >
+          {/* Swiper Container */}
+          <div className="ml-0 mr-0 md:ml-10 md:mr-10 w-full md:w-[40%]">
+            <Swiper
+              effect={"cards"}
+              grabCursor={true}
+              modules={[EffectCards]}
+              className="mySwiper w-full max-w-full"
+              onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+            >
+              {arrayProject.map((el: StructProject, idx) => (
+                <SwiperSlide key={idx}>
+                  <div
+                    className="
+                      flex
+                      justify-center
+                      items-center
+                      min-h-[250px]
+                      w-full
+                      relative
+                    "
+                    style={{
+                      backgroundImage: `url(${el.img})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  >
+                    <p className="z-10 text-white text-xl font-semibold">
+                      {el.name}
+                    </p>
+                    <div className="absolute  inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
+          {/* Project Description */}
+          <div
+            className="
+              bg-gray-100
+              p-6
+              rounded-lg
+              flex-1
+              min-w-[200px]
+              z-10
+              text-gray-800
+              text-left
+              mx-auto
+              md:mx-0
+              w-full
+              md:w-[50%]
+            "
+          >
+            {arrayProject[activeIndex].desc}
+          </div>
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50 pointer-events-none" />
+      </section>
+    </main>
   );
-};
-
-export default ViewContact;
+}

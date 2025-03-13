@@ -141,8 +141,6 @@ const ViewProjectPage = () => {
                                 </div>
                             </button>
                         </div>
-                        
-                        
                     </div>
                 ))}
                 </div>
